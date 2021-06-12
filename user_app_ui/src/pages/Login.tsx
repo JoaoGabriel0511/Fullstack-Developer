@@ -55,6 +55,10 @@ export default function Login() {
             setOpen(true)
             setMsg("User registration successful")
             setSeverity("success")
+        } else if(location?.state?.userDeleted) {
+            setOpen(true)
+            setMsg("User deleted")
+            setSeverity("success")
         }
     }, []);
 

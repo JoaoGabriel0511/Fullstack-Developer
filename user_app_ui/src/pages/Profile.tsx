@@ -60,7 +60,14 @@ export default function Profile() {
 
     const userDelete = () => {
         deleteUser(localStorage.getItem("USER_TOKEN")!)
-        logout()
+        localStorage.removeItem("USER_TOKEN")
+        history.push({
+                pathname: '/',
+                state: {
+                    userDeleted: true
+                }
+            }
+        )
     }
 
     return (
