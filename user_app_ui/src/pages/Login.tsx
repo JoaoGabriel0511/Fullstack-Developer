@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
     const location = useLocation();
-    const [open, setOpen] = React.useState<boolean>(location.state?.userCreated)
+    const [open, setOpen] = React.useState<boolean>(location?.state?.userCreated)
     const classes = useStyles();
 
 
