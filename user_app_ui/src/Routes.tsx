@@ -3,6 +3,7 @@ import React from "react";
 import {  BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 
 export default function Routes() {
     return (
@@ -13,6 +14,9 @@ export default function Routes() {
                 </Route>
                 <Route exact path="/SignUp">
                     <SignUp />
+                </Route>
+                <Route exact path="/Profile">
+                    <Profile />
                 </Route>
             </Switch>
         </BrowserRouter>

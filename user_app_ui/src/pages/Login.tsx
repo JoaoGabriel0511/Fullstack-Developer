@@ -13,9 +13,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from "../components/CopyRight";
 // @ts-ignore
-import {useLocation} from "react-router-dom";
+import {useLocation, useHistory} from "react-router-dom";
 import Notification from "../components/Notification";
 import {Link} from "@material-ui/core";
+import {userLogin} from "../services/login";
+import {UserLoginData} from "../interfaces/UserLoginData";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -39,9 +41,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
     const location = useLocation();
+    const history = useHistory();
     const [open, setOpen] = React.useState<boolean>(location?.state?.userCreated)
+    const [email, setEmail] = React.useState<String>("")
+    const [password, setPassword] = React.useState<String>("")
     const classes = useStyles();
 
+    const login = (e: React.FormEvent) => {
+        e.preventDefault()
+        const userLoginData: UserLoginData = {
+            email: email,
+            password: password
+        }
+        userLogin(userLoginData).then(r => {
+                localStorage.setItem("USER_TOKEN", r.user.token);
+                history.push({
+                    pathname: '/Profile'
+                })
+            }
+        )
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -64,6 +83,7 @@ export default function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={(e) => {setEmail(e.target.value)}}
                     />
                     <TextField
                         variant="outlined"
@@ -75,6 +95,7 @@ export default function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={(e) => {setPassword(e.target.value)}}
                     />
                     <Button
                         type="submit"
@@ -82,6 +103,7 @@ export default function Login() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        onClick={login}
                     >
                         Sign In
                     </Button>

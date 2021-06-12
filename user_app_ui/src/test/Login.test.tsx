@@ -11,8 +11,6 @@ jest.mock('react-router-dom', () => ({
 
 describe("Login Page", () => {
     it("should render password and email fields", () => {
-
-
         const { container } = render(<Login />)
 
         expect(container.querySelector("#email")).toBeInTheDocument();
