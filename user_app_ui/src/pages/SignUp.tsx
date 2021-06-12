@@ -15,9 +15,10 @@ import Copyright from "../components/CopyRight";
 import {userRegistration} from "../services/registration";
 import {UserRegistrationData} from "../interfaces/UserRegistrationData";
 // @ts-ignore
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Notification from "../components/Notification";
 import errorHandler from "../utils/errorHandler";
+import {Link} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -149,7 +150,7 @@ export default function SignUp() {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link to="/" variant="body2">
+                            <Link href="/" variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>

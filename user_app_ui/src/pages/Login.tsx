@@ -13,8 +13,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from "../components/CopyRight";
 // @ts-ignore
-import {Link, useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import Notification from "../components/Notification";
+import {Link} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -86,7 +87,7 @@ export default function Login() {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link to='/SignUp' variant="body2">
+                            <Link href='/SignUp' variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
