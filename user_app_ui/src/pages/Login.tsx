@@ -18,6 +18,7 @@ import Notification from "../components/Notification";
 import {Link} from "@material-ui/core";
 import {userLogin} from "../services/login";
 import {UserLoginData} from "../interfaces/UserLoginData";
+import errorHandler from "../utils/errorHandler";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -42,10 +43,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
     const location = useLocation();
     const history = useHistory();
-    const [open, setOpen] = React.useState<boolean>(location?.state?.userCreated)
+    const [open, setOpen] = React.useState<boolean>(false)
     const [email, setEmail] = React.useState<String>("")
     const [password, setPassword] = React.useState<String>("")
+    const [msg, setMsg] = React.useState<Array<JSX.Element> | String>("")
+    const [severity, setSeverity] = React.useState<String>("")
     const classes = useStyles();
+
+    useEffect(() => {
+        if(location?.state?.userCreated) {
+            setOpen(true)
+            setMsg("User registration successful")
+            setSeverity("success")
+        }
+    }, []);
 
     const login = (e: React.FormEvent) => {
         e.preventDefault()
@@ -54,12 +65,18 @@ export default function Login() {
             password: password
         }
         userLogin(userLoginData).then(r => {
+            if (r.errors == null) {
                 localStorage.setItem("USER_TOKEN", r.user.token);
                 history.push({
                     pathname: '/Profile'
                 })
+            } else {
+                const errors = errorHandler(r)
+                setOpen(true)
+                setMsg(errors)
+                setSeverity("error")
             }
-        )
+        })
     }
 
     return (
@@ -116,7 +133,7 @@ export default function Login() {
                     </Grid>
                 </form>
             </div>
-            <Notification msg={"User registration successful"} severity={"success"} open={open} setOpen={setOpen}/>
+            <Notification msg={msg} severity={severity} open={open} setOpen={setOpen}/>
             <Box mt={8}>
                 <Copyright />
             </Box>
