@@ -12,6 +12,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DeleteIcon from '@material-ui/icons/Delete';
 // @ts-ignore
 import {useLocation, useHistory} from "react-router-dom";
+import loadUserData from "../utils/loadUserData";
+import Notification from "../components/Notification";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,24 +36,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Profile() {
     const classes = useStyles();
     const [user, setUser] = React.useState<UserData | null>(null)
+    const [open, setOpen] = React.useState<boolean>(false)
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
-        loadUserData();
+        loadUserData().then(r => setUser(r));
+        if(location?.state?.userRegistration) {
+            setOpen(true)
+        }
     }, []);
 
-    const loadUserData = () => {
-        getUserData(localStorage.getItem("USER_TOKEN")!).then(r => {
-                const userData: UserData = {
-                    email: r.user.email,
-                    fullName: r.user.full_name,
-                    role: r.user.role,
-                    id: r.user.id
-                }
-                setUser(userData)
-            }
-        )
-    }
 
     const logout = () => {
         localStorage.removeItem("USER_TOKEN")
@@ -78,7 +73,7 @@ export default function Profile() {
                     Welcome  {user?.fullName}
                 </Typography>
                 <Tooltip title="Edit profile">
-                    <Fab aria-label="add">
+                    <Fab aria-label="add" href="/Profile/Edit">
                         <EditIcon />
                     </Fab>
                 </Tooltip>
@@ -100,6 +95,7 @@ export default function Profile() {
                     <Copyright />
                 </Container>
             </footer>
+            <Notification msg={"Profile edited"} severity={"success"} open={open} setOpen={setOpen}/>
         </div>
     );
 }

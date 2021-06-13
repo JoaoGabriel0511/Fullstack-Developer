@@ -51,7 +51,7 @@ export default function Login() {
     const classes = useStyles();
 
     useEffect(() => {
-        if(location?.state?.userCreated) {
+        if(location?.state?.userRegistration) {
             setOpen(true)
             setMsg("User registration successful")
             setSeverity("success")
