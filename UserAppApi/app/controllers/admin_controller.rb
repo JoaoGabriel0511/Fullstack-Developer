@@ -29,4 +29,10 @@ class AdminController < ApplicationController
     user.save
   end
 
+  def deleteUser
+    user = User.find(params[:user_id])
+    user.destroy
+    render json: {user: user}
+  end
+
 end
