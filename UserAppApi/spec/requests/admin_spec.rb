@@ -92,4 +92,25 @@ RSpec.describe "Admins", type: :request do
     end
 
   end
+
+  describe "PUT /toggleUserRole" do
+
+    it 'should toggle an user role when the current user is an admin' do
+      put '/api/admin/toggleUserRole/' + @user1.id.to_s, headers: {"Authorization"  => "Token " + @adminToken}
+      expect(response).to have_http_status(204)
+      user = User.find(@user1.id)
+      expect(user.ADMIN?).to be_truthy
+    end
+
+    it "should return http unauthorized when user is not admin" do
+      put '/api/admin/toggleUserRole/' + @user1.id.to_s, headers: {"Authorization"  => "Token " + @noAdminToken}
+      expect(response).to have_http_status(401)
+    end
+
+    it "should return http unauthorized when user is not authenticated" do
+      put '/api/admin/toggleUserRole/' + @user1.id.to_s
+      expect(response).to have_http_status(401)
+    end
+
+  end
 end
