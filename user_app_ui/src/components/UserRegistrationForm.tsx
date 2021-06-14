@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -12,16 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from "../components/CopyRight";
-import {userRegistration} from "../services/registration";
 import {UserRegistrationData} from "../interfaces/UserRegistrationData";
 // @ts-ignore
 import { useHistory } from "react-router-dom";
 import Notification from "../components/Notification";
 import errorHandler from "../utils/errorHandler";
-import {Link} from "@material-ui/core";
-import {promises} from "dns";
+import {Input, Link} from "@material-ui/core";
 import loadUserData from "../utils/loadUserData";
-import {UserData} from "../interfaces/UserData";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -58,6 +53,7 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
     const [passwordConfirmation, setPasswordConfirmation] = React.useState<String>("");
     const [open, setOpen] = React.useState<boolean>(false);
     const [msg, setMsg] = React.useState<Array<JSX.Element> | String>("");
+    const [image, setImage] = React.useState<File>();
     const history = useHistory();
 
     useEffect(() => {
@@ -75,7 +71,8 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
             fullName: fullName,
             email: email,
             password: password,
-            passwordConfirmation: passwordConfirmation
+            passwordConfirmation: passwordConfirmation,
+            image: image
         }
         registrationService(userRegistrationData, localStorage.getItem("USER_TOKEN")).then(response => {
             if(response.errors != null) {
@@ -91,6 +88,15 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                 })
             }
         })
+    }
+
+    const onChangeFile = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        const input = event.target as HTMLInputElement;
+        if (!input.files?.length) {
+            return;
+        }
+        const file = input.files[0];
+        setImage(file)
     }
 
     return (
@@ -160,6 +166,13 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                                 autoComplete="current-password"
                             />
                         </Grid>
+                        <Grid item xs={12}>
+                            <Input
+                                type='file'
+                                name='picture'
+                                onChange={(e) => onChangeFile(e) }
+                            />
+                        </Grid>
                     </Grid>
                     <Button
                         type="submit"
@@ -169,7 +182,7 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                         className={classes.submit}
                         onClick={createUser}
                     >
-                        Sign Up
+                        {title}
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
