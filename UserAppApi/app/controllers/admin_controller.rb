@@ -11,7 +11,7 @@ class AdminController < ApplicationController
   end
 
   def noAdminUsersCount
-    render json: {adminUsersCount: User.where(role: :NO_ADMIN).count}
+    render json: {noAdminUsersCount: User.where(role: :NO_ADMIN).count}
   end
 
   def recoverUsers

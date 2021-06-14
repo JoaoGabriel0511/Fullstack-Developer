@@ -32,8 +32,7 @@ class ApplicationController < ActionController::Base
     end
 
     def authenticate_admin!(options = {})
-      authenticate_user!
-      head :unauthorized unless current_user.ADMIN?
+      head :unauthorized unless signed_in? && current_user.ADMIN?
     end
 
     def current_user
