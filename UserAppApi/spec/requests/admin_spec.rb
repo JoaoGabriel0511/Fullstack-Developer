@@ -116,7 +116,7 @@ RSpec.describe "Admins", type: :request do
 
   describe "DELETE /deleteUser" do
 
-    it 'should toggle an user role when the current user is an admin' do
+    it 'should delete an user role when the current user is an admin' do
       delete '/api/admin/deleteUser/' + @user1.id.to_s, headers: {"Authorization"  => "Token " + @adminToken}
       expect(response).to have_http_status(200)
       expect{User.find(@user1.id)}.to raise_error(ActiveRecord::RecordNotFound)
@@ -129,6 +129,40 @@ RSpec.describe "Admins", type: :request do
 
     it "should return http unauthorized when user is not authenticated" do
       delete '/api/admin/deleteUser/' + @user1.id.to_s
+      expect(response).to have_http_status(401)
+    end
+
+  end
+
+  describe "PUT /editUser" do
+
+    it 'should edit an user role when the current user is an admin' do
+      put '/api/admin/editUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'judy@email.com', role: :ADMIN}}, headers: {"Authorization"  => "Token " + @adminToken}
+      expect(response).to have_http_status(200)
+      data = JSON.parse(response.body)
+      user = User.find(@user1.id)
+      expect(data["user"]["full_name"]).to eq("judy")
+      expect(user.full_name).to eq("judy")
+      expect(data["user"]["email"]).to eq("judy@email.com")
+      expect(user.email).to eq("judy@email.com")
+      expect(data["user"]["role"]).to eq("ADMIN")
+      expect(user.role).to eq("ADMIN")
+    end
+
+    it "returns a http unprocessable_entity with the validation errors when updating the user with invalid data" do
+      put '/api/admin/editUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'joe@email.com'}}, headers: {"Authorization"  => "Token " + @adminToken}
+      expect(response).to have_http_status(:unprocessable_entity)
+      errors = JSON.parse(response.body)["errors"]
+      expect(errors["email"]).to eq ["has already been taken"]
+    end
+
+    it "should return http unauthorized when user is not admin" do
+      put '/api/admin/editUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'judy@email.com', role: :ADMIN}}, headers: {"Authorization"  => "Token " + @noAdminToken}
+      expect(response).to have_http_status(401)
+    end
+
+    it "should return http unauthorized when user is not authenticated" do
+      put '/api/admin/editUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'judy@email.com', role: :ADMIN}}
       expect(response).to have_http_status(401)
     end
 
