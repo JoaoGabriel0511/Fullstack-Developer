@@ -113,4 +113,24 @@ RSpec.describe "Admins", type: :request do
     end
 
   end
+
+  describe "DELETE /deleteUser" do
+
+    it 'should toggle an user role when the current user is an admin' do
+      delete '/api/admin/deleteUser/' + @user1.id.to_s, headers: {"Authorization"  => "Token " + @adminToken}
+      expect(response).to have_http_status(200)
+      expect{User.find(@user1.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "should return http unauthorized when user is not admin" do
+      delete '/api/admin/deleteUser/' + @user1.id.to_s, headers: {"Authorization"  => "Token " + @noAdminToken}
+      expect(response).to have_http_status(401)
+    end
+
+    it "should return http unauthorized when user is not authenticated" do
+      delete '/api/admin/deleteUser/' + @user1.id.to_s
+      expect(response).to have_http_status(401)
+    end
+
+  end
 end
