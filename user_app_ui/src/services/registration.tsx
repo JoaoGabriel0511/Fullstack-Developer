@@ -2,11 +2,11 @@ import {UserRegistrationData} from "../interfaces/UserRegistrationData";
 import {baseUrl} from "./url";
 
 export const userRegistration = async (userRegistrationData: UserRegistrationData) => {
-    const data = new FormData()
+    /*const data = new FormData()
     Object.keys(userRegistrationData).forEach((key, value) => {
         // @ts-ignore
         data.append(key, userRegistrationData[key].toString())
-    })
+    })*/
     const requestOptions = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

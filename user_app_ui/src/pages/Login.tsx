@@ -49,6 +49,7 @@ export default function Login() {
     const classes = useStyles();
 
     useEffect(() => {
+        localStorage.removeItem("USER_TOKEN")
         if(location?.state?.userRegistration) {
             setOpen(true)
             setMsg("User registration successful")

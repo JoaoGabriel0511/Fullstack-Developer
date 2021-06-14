@@ -43,9 +43,11 @@ export type Props = {
     returnPath: String;
     registrationService: (userRegistrationData: UserRegistrationData, token: String | null) => Promise<any>;
     recoverUserService?: (token: String) => Promise<any>;
+    linkMessage: String;
+    linkPath: string;
 };
 
-export default function UserRegistrationForm({title, returnPath, registrationService}:Props) {
+export default function UserRegistrationForm({title, returnPath, registrationService, linkMessage, linkPath}:Props) {
     const classes = useStyles();
     const [fullName, setFullName] = React.useState<String>("");
     const [email, setEmail] = React.useState<String>("");
@@ -186,8 +188,8 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="/" variant="body2">
-                                Already have an account? Sign in
+                            <Link href={linkPath} variant="body2">
+                                {linkMessage}
                             </Link>
                         </Grid>
                     </Grid>
