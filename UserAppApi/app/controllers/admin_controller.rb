@@ -35,4 +35,18 @@ class AdminController < ApplicationController
     render json: {user: user}
   end
 
+  def editUser
+    user = User.find(params[:user_id])
+    if user.update(user_params)
+      render json: {user: user}
+    else
+      render json: { errors: user.errors }, status: :unprocessable_entity
+    end
+  end
+
+  private
+    def user_params
+      params.require(:user).permit(:full_name, :email, :role, :image)
+    end
+
 end
