@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     get '/admin/adminUsersCount', to: 'admin#adminUsersCount'
     get '/admin/noAdminUsersCount', to: 'admin#noAdminUsersCount'
     get '/admin/recoverUsers', to: 'admin#recoverUsers'
+    put '/admin/toggleUserRole/:user_id', to: 'admin#toggleUserRole'
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

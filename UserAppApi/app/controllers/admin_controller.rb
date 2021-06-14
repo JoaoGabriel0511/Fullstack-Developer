@@ -19,4 +19,14 @@ class AdminController < ApplicationController
     render json: {users: users}
   end
 
+  def toggleUserRole
+    user = User.find(params[:user_id])
+    if(user.ADMIN?)
+      user.role = :NO_ADMIN
+    else
+      user.role = :ADMIN
+    end
+    user.save
+  end
+
 end
