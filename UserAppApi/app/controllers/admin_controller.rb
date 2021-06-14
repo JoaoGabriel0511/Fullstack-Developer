@@ -15,7 +15,7 @@ class AdminController < ApplicationController
   end
 
   def recoverUsers
-    users = User.all
+    users = User.where.not(id: current_user.id)
     render json: {users: users}
   end
 

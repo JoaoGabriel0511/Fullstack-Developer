@@ -14,6 +14,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {useLocation, useHistory} from "react-router-dom";
 import loadUserData from "../utils/loadUserData";
 import Notification from "../components/Notification";
+import ProfileButtons from "../components/ProfileButtons";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,33 +38,21 @@ export default function Profile() {
     const classes = useStyles();
     const [user, setUser] = React.useState<UserData | null>(null)
     const [open, setOpen] = React.useState<boolean>(false)
-    const history = useHistory();
     const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
-        loadUserData().then(r => setUser(r));
+        loadUserData().then(r => {
+            if(r.role == "ADMIN") {
+                history.push('/AdminDashboard')
+            }
+            setUser(r)
+        });
         if(location?.state?.userRegistration) {
             setOpen(true)
         }
     }, []);
 
-
-    const logout = () => {
-        localStorage.removeItem("USER_TOKEN")
-        history.push('/')
-    }
-
-    const userDelete = () => {
-        deleteUser(localStorage.getItem("USER_TOKEN")!)
-        localStorage.removeItem("USER_TOKEN")
-        history.push({
-                pathname: '/',
-                state: {
-                    userDeleted: true
-                }
-            }
-        )
-    }
 
     return (
         <div className={classes.root}>
@@ -72,21 +61,7 @@ export default function Profile() {
                 <Typography variant="h2" component="h1" gutterBottom>
                     Welcome  {user?.fullName}
                 </Typography>
-                <Tooltip title="Edit profile">
-                    <Fab aria-label="add" href="/Profile/Edit">
-                        <EditIcon />
-                    </Fab>
-                </Tooltip>
-                <Tooltip title="Delete account">
-                    <Fab color="secondary" aria-label="add" onClick={userDelete}>
-                        <DeleteIcon />
-                    </Fab>
-                </Tooltip>
-                <Tooltip title="Logout">
-                    <Fab color="primary" aria-label="add" onClick={logout}>
-                        <ExitToAppIcon />
-                    </Fab>
-                </Tooltip>
+                <ProfileButtons/>
                 <Typography variant="body1">Sticky footer placeholder.</Typography>
             </Container>
             <footer className={classes.footer}>

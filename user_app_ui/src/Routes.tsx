@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import AdminDashboard from "./pages/AdminDashboard";
 
 export default function Routes() {
     return (
@@ -21,6 +22,9 @@ export default function Routes() {
                 </Route>
                 <Route exact path="/Profile/Edit">
                     <EditProfile/>
+                </Route>
+                <Route exact path="/AdminDashboard">
+                    <AdminDashboard/>
                 </Route>
             </Switch>
         </BrowserRouter>
