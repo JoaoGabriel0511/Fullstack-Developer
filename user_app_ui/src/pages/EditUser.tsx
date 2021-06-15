@@ -10,6 +10,6 @@ export default function EditUser() {
     let { userId } = useParams();
 
     return (
-        <UserRegistrationForm isEdit={true} title="Edit User" returnPath="/AdminDashboard" registrationService={editUser} linkMessage={"return to dashboard"} linkPath={"/AdminDashboard"} userId={userId}/>
+        <UserRegistrationForm isLogged={true} title="Edit User" returnPath="/AdminDashboard" registrationService={editUser} linkMessage={"return to dashboard"} linkPath={"/AdminDashboard"} userId={userId}/>
     );
 }

@@ -45,11 +45,11 @@ export type Props = {
     recoverUserService?: (token: String) => Promise<any>;
     linkMessage: String;
     linkPath: string;
-    isEdit: boolean;
+    isLogged: boolean;
     userId: number | null;
 };
 
-export default function UserRegistrationForm({title, returnPath, registrationService, linkMessage, linkPath, isEdit, userId}:Props) {
+export default function UserRegistrationForm({title, returnPath, registrationService, linkMessage, linkPath, isLogged, userId}:Props) {
     const classes = useStyles();
     const [fullName, setFullName] = React.useState<String>("");
     const [email, setEmail] = React.useState<String>("");
@@ -61,11 +61,18 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
     const history = useHistory();
 
     useEffect(() => {
-        if(isEdit) {
-            loadUserData(userId).then(r => {
-                setFullName(r.fullName)
-                setEmail(r.email)
-            })
+        if(isLogged) {
+            if(userId != null) {
+                loadUserData(userId).then(r => {
+                    setFullName(r.fullName)
+                    setEmail(r.email)
+                }).catch((error) => {
+                    history.push("/401")
+                })
+            }
+        }
+        if(localStorage.getItem("USER_TOKEN") == null) {
+            history.push("/401")
         }
     }, []);
 
@@ -142,7 +149,7 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                                 autoComplete="email"
                             />
                         </Grid>
-                        {isEdit == false &&
+                        {isLogged == false &&
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     variant="outlined"
@@ -158,7 +165,7 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                                 />
                             </Grid>
                         }
-                        {isEdit == false &&
+                        {isLogged == false &&
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     variant="outlined"

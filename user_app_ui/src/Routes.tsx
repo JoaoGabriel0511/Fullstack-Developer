@@ -8,6 +8,7 @@ import EditProfile from "./pages/EditProfile";
 import AdminDashboard from "./pages/AdminDashboard";
 import CreateUser from "./pages/CreateUser";
 import EditUser from "./pages/EditUser";
+import Page401 from "./pages/ErrorPages/Page401";
 
 export default function Routes() {
     return (
@@ -33,6 +34,9 @@ export default function Routes() {
                 </Route>
                 <Route exact path="/AdminDashboard/CreateUser">
                     <CreateUser/>
+                </Route>
+                <Route exact path="/401">
+                    <Page401/>
                 </Route>
             </Switch>
         </BrowserRouter>

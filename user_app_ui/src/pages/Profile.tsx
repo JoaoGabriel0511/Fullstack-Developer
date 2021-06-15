@@ -47,6 +47,8 @@ export default function Profile() {
                 history.push('/AdminDashboard')
             }
             setUser(r)
+        }).catch((error) => {
+            history.push("/401")
         });
         if(location?.state?.userRegistration) {
             setOpen(true)

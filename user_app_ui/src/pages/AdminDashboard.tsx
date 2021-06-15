@@ -7,18 +7,17 @@ import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import AdminUserInfo from '../components/AdminUserInfo';
 import UsersCountInfo from '../components/UsersCountInfo';
 import UsersTable from '../components/UsersTable';
 import Copyright from "../components/CopyRight";
 import loadUserData from "../utils/loadUserData";
 import {UserData} from "../interfaces/UserData";
+// @ts-ignore
+import {useHistory} from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -79,10 +78,13 @@ export default function AdminDashboard() {
     const classes = useStyles();
     const [adminUser, setAdminUser] = React.useState<UserData>()
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const history = useHistory()
 
 
     useEffect(() => {
-        loadUserData(null).then(r => setAdminUser(r))
+        loadUserData(null).then(r => setAdminUser(r)).catch((error) => {
+            history.push("/401")
+        })
     }, []);
 
     return (
