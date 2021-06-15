@@ -53,6 +53,7 @@ export default function UsersTable() {
                         <TableCell>Role</TableCell>
                         <TableCell></TableCell>
                         <TableCell></TableCell>
+                        <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -63,13 +64,14 @@ export default function UsersTable() {
                             <TableCell>{user.role}</TableCell>
                             <TableCell><Button onClick={() => {toggleRole(user.id)}} fullWidth variant="contained" color="primary">Toggle role</Button></TableCell>
                             <TableCell><Button onClick={() => {deleteUser(user.id)}} fullWidth variant="contained" color="secondary">Delete</Button></TableCell>
+                            <TableCell><Button href={"/AdminDashboard/EditUser/" + user.id} fullWidth variant="contained">Edit</Button></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
             <div className={classes.seeMore}>
-                <Link color="primary">
-                    See more orders
+                <Link color="primary" href={"/AdminDashboard/CreateUser"}>
+                    Creat user
                 </Link>
             </div>
         </React.Fragment>

@@ -7,6 +7,6 @@ export default function SignUp() {
 
 
     return (
-        <UserRegistrationForm title="Sign Up" returnPath="/" registrationService={userRegistration} linkMessage={" Already have an account? Sign in"} linkPath={"/"}/>
+        <UserRegistrationForm userId={null} isEdit={false} title="Sign Up" returnPath="/" registrationService={userRegistration} linkMessage={" Already have an account? Sign in"} linkPath={"/"}/>
     );
 }

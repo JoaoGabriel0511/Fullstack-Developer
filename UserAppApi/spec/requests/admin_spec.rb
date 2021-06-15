@@ -74,11 +74,11 @@ RSpec.describe "Admins", type: :request do
 
   describe "GET /recoverUsers" do
 
-    it "should return the total number of user when current user is an admin" do
+    it "should return all of the other users when current user is an admin" do
       get '/api/admin/recoverUsers', headers: {"Authorization"  => "Token " + @adminToken}
       data = JSON.parse(response.body)
-      expect(data["users"]).to have_attributes(size: 3)
-      expect(data["users"].map{|it| it["id"]}).to contain_exactly(@user1.id, @user2.id, @user3.id)
+      expect(data["users"]).to have_attributes(size: 2)
+      expect(data["users"].map{|it| it["id"]}).to contain_exactly(@user1.id, @user2.id)
     end
 
     it "should return http unauthorized when user is not admin" do
@@ -163,6 +163,29 @@ RSpec.describe "Admins", type: :request do
 
     it "should return http unauthorized when user is not authenticated" do
       put '/api/admin/editUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'judy@email.com', role: :ADMIN}}
+      expect(response).to have_http_status(401)
+    end
+
+  end
+
+  describe "GET /recoverUser" do
+
+    it 'should recover an user role when the current user is an admin' do
+      get '/api/admin/recoverUser/' + @user1.id.to_s, headers: {"Authorization"  => "Token " + @adminToken}
+      expect(response).to have_http_status(200)
+      data = JSON.parse(response.body)
+      expect(data["user"]["full_name"]).to eq(@user1.full_name)
+      expect(data["user"]["email"]).to eq(@user1.email)
+      expect(data["user"]["role"]).to eq(@user1.role)
+    end
+
+    it "should return http unauthorized when user is not admin" do
+      get '/api/admin/recoverUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'judy@email.com', role: :ADMIN}}, headers: {"Authorization"  => "Token " + @noAdminToken}
+      expect(response).to have_http_status(401)
+    end
+
+    it "should return http unauthorized when user is not authenticated" do
+      get '/api/admin/recoverUser/' + @user1.id.to_s, params: { user: { full_name: 'judy', email: 'judy@email.com', role: :ADMIN}}
       expect(response).to have_http_status(401)
     end
 

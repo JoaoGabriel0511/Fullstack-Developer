@@ -1,4 +1,5 @@
 import {baseUrl} from "./url";
+import {UserRegistrationData} from "../interfaces/UserRegistrationData";
 
 export const getTotalUsersCount = async (token: String) => {
     const requestOptions = {
@@ -50,5 +51,31 @@ export const userDelete = async (token: String, id: number) => {
         headers: {'Content-Type': 'application/json', 'Authorization': `Token ${token}`}
     }
     const response = await fetch(`${baseUrl}/api/admin/deleteUser/${id}`, requestOptions)
+    return response.json()
+}
+
+export const recoverUser = async (token: String, id: number) => {
+    const requestOptions = {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json', 'Authorization': `Token ${token}`}
+    }
+    const response = await fetch(`${baseUrl}/api/admin/recoverUser/${id}`, requestOptions)
+    return response.json()
+}
+
+export const editUser = async (userRegistrationData: UserRegistrationData, token: String | null, id: number | null) => {
+    const requestOptions = {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json', 'Authorization': `Token ${token}`},
+        body: JSON.stringify({
+            user: {
+                full_name: userRegistrationData.fullName,
+                email: userRegistrationData.email,
+                password: userRegistrationData.password,
+                password_confirmation: userRegistrationData.passwordConfirmation
+            }
+        })
+    }
+    const response = await fetch(`${baseUrl}/api/admin/editUser/${id}`, requestOptions)
     return response.json()
 }

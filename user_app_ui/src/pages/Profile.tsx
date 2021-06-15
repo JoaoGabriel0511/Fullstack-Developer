@@ -42,7 +42,7 @@ export default function Profile() {
     const history = useHistory();
 
     useEffect(() => {
-        loadUserData().then(r => {
+        loadUserData(null).then(r => {
             if(r.role == "ADMIN") {
                 history.push('/AdminDashboard')
             }

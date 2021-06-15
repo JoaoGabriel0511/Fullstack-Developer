@@ -6,6 +6,8 @@ import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import AdminDashboard from "./pages/AdminDashboard";
+import CreateUser from "./pages/CreateUser";
+import EditUser from "./pages/EditUser";
 
 export default function Routes() {
     return (
@@ -25,6 +27,12 @@ export default function Routes() {
                 </Route>
                 <Route exact path="/AdminDashboard">
                     <AdminDashboard/>
+                </Route>
+                <Route exact path="/AdminDashboard/EditUser/:userId">
+                    <EditUser/>
+                </Route>
+                <Route exact path="/AdminDashboard/CreateUser">
+                    <CreateUser/>
                 </Route>
             </Switch>
         </BrowserRouter>

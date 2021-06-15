@@ -44,9 +44,14 @@ class AdminController < ApplicationController
     end
   end
 
+  def recoverUser
+    user = User.find(params[:user_id])
+    render json: {user: user}
+  end
+
   private
     def user_params
-      params.require(:user).permit(:full_name, :email, :role, :image)
+      params.require(:user).permit(:full_name, :email, :image)
     end
 
 end

@@ -41,13 +41,15 @@ const useStyles = makeStyles((theme) => ({
 export type Props = {
     title: String;
     returnPath: String;
-    registrationService: (userRegistrationData: UserRegistrationData, token: String | null) => Promise<any>;
+    registrationService: (userRegistrationData: UserRegistrationData, token: String | null, id: number | null) => Promise<any>;
     recoverUserService?: (token: String) => Promise<any>;
     linkMessage: String;
     linkPath: string;
+    isEdit: boolean;
+    userId: number | null;
 };
 
-export default function UserRegistrationForm({title, returnPath, registrationService, linkMessage, linkPath}:Props) {
+export default function UserRegistrationForm({title, returnPath, registrationService, linkMessage, linkPath, isEdit, userId}:Props) {
     const classes = useStyles();
     const [fullName, setFullName] = React.useState<String>("");
     const [email, setEmail] = React.useState<String>("");
@@ -59,8 +61,8 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
     const history = useHistory();
 
     useEffect(() => {
-        if(registrationService != undefined) {
-            loadUserData().then(r => {
+        if(isEdit) {
+            loadUserData(userId).then(r => {
                 setFullName(r.fullName)
                 setEmail(r.email)
             })
@@ -76,7 +78,7 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
             passwordConfirmation: passwordConfirmation,
             image: image
         }
-        registrationService(userRegistrationData, localStorage.getItem("USER_TOKEN")).then(response => {
+        registrationService(userRegistrationData, localStorage.getItem("USER_TOKEN"), userId).then(response => {
             if(response.errors != null) {
                 const errors = errorHandler(response)
                 setOpen(true)
@@ -140,34 +142,38 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                                 autoComplete="email"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                value={password}
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                onChange={(e) => setPassword(e.target.value)}
-                                autoComplete="current-password"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                value={passwordConfirmation}
-                                name="passwordConfirmation"
-                                label="Password Confirmation"
-                                type="password"
-                                id="passwordConfirmation"
-                                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                autoComplete="current-password"
-                            />
-                        </Grid>
+                        {isEdit == false &&
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    value={password}
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    autoComplete="current-password"
+                                />
+                            </Grid>
+                        }
+                        {isEdit == false &&
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    value={passwordConfirmation}
+                                    name="passwordConfirmation"
+                                    label="Password Confirmation"
+                                    type="password"
+                                    id="passwordConfirmation"
+                                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                                    autoComplete="current-password"
+                                />
+                            </Grid>
+                        }
                         <Grid item xs={12}>
                             <Input
                                 type='file'

@@ -82,7 +82,7 @@ export default function AdminDashboard() {
 
 
     useEffect(() => {
-        loadUserData().then(r => setAdminUser(r))
+        loadUserData(null).then(r => setAdminUser(r))
     }, []);
 
     return (

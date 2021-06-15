@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     put '/admin/toggleUserRole/:user_id', to: 'admin#toggleUserRole'
     delete '/admin/deleteUser/:user_id', to: 'admin#deleteUser'
     put '/admin/editUser/:user_id', to: 'admin#editUser'
+    get '/admin/recoverUser/:user_id', to: 'admin#recoverUser'
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
