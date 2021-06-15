@@ -15,7 +15,7 @@ import {UserRegistrationData} from "../interfaces/UserRegistrationData";
 import { useHistory } from "react-router-dom";
 import Notification from "../components/Notification";
 import errorHandler from "../utils/errorHandler";
-import {Input, Link} from "@material-ui/core";
+import {Link} from "@material-ui/core";
 import loadUserData from "../utils/loadUserData";
 
 const useStyles = makeStyles((theme) => ({
@@ -181,13 +181,6 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                                 />
                             </Grid>
                         }
-                        <Grid item xs={12}>
-                            <Input
-                                type='file'
-                                name='picture'
-                                onChange={(e) => onChangeFile(e) }
-                            />
-                        </Grid>
                     </Grid>
                     <Button
                         type="submit"
