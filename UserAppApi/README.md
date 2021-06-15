@@ -5,20 +5,17 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Ruby Version: 3.0.0
 
-* System dependencies
+* Rails Version: 6.1.3
 
-* Configuration
+* Database configuration: in /config/database.yml configure your local database username and password
+  
+* Database initialization: 
+  rails db:create, rails db:migrate, rails db:seed
 
-* Database creation
+* Install dependencies: bundle install
 
-* Database initialization
+* Running localhost: rails s
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Running tests: rspec
