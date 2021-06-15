@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -12,16 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from "../components/CopyRight";
-import {userRegistration} from "../services/registration";
 import {UserRegistrationData} from "../interfaces/UserRegistrationData";
 // @ts-ignore
 import { useHistory } from "react-router-dom";
 import Notification from "../components/Notification";
 import errorHandler from "../utils/errorHandler";
-import {Link} from "@material-ui/core";
-import {promises} from "dns";
+import {Input, Link} from "@material-ui/core";
 import loadUserData from "../utils/loadUserData";
-import {UserData} from "../interfaces/UserData";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -46,11 +41,15 @@ const useStyles = makeStyles((theme) => ({
 export type Props = {
     title: String;
     returnPath: String;
-    registrationService: (userRegistrationData: UserRegistrationData, token: String | null) => Promise<any>;
+    registrationService: (userRegistrationData: UserRegistrationData, token: String | null, id: number | null) => Promise<any>;
     recoverUserService?: (token: String) => Promise<any>;
+    linkMessage: String;
+    linkPath: string;
+    isLogged: boolean;
+    userId: number | null;
 };
 
-export default function UserRegistrationForm({title, returnPath, registrationService}:Props) {
+export default function UserRegistrationForm({title, returnPath, registrationService, linkMessage, linkPath, isLogged, userId}:Props) {
     const classes = useStyles();
     const [fullName, setFullName] = React.useState<String>("");
     const [email, setEmail] = React.useState<String>("");
@@ -58,14 +57,22 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
     const [passwordConfirmation, setPasswordConfirmation] = React.useState<String>("");
     const [open, setOpen] = React.useState<boolean>(false);
     const [msg, setMsg] = React.useState<Array<JSX.Element> | String>("");
+    const [image, setImage] = React.useState<File>();
     const history = useHistory();
 
     useEffect(() => {
-        if(registrationService != undefined) {
-            loadUserData().then(r => {
-                setFullName(r.fullName)
-                setEmail(r.email)
-            })
+        if(isLogged) {
+            if(userId != null) {
+                loadUserData(userId).then(r => {
+                    setFullName(r.fullName)
+                    setEmail(r.email)
+                }).catch((error) => {
+                    history.push("/401")
+                })
+            }
+        }
+        if(localStorage.getItem("USER_TOKEN") == null) {
+            history.push("/401")
         }
     }, []);
 
@@ -75,9 +82,10 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
             fullName: fullName,
             email: email,
             password: password,
-            passwordConfirmation: passwordConfirmation
+            passwordConfirmation: passwordConfirmation,
+            image: image
         }
-        registrationService(userRegistrationData, localStorage.getItem("USER_TOKEN")).then(response => {
+        registrationService(userRegistrationData, localStorage.getItem("USER_TOKEN"), userId).then(response => {
             if(response.errors != null) {
                 const errors = errorHandler(response)
                 setOpen(true)
@@ -91,6 +99,15 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                 })
             }
         })
+    }
+
+    const onChangeFile = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+        const input = event.target as HTMLInputElement;
+        if (!input.files?.length) {
+            return;
+        }
+        const file = input.files[0];
+        setImage(file)
     }
 
     return (
@@ -132,32 +149,43 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                                 autoComplete="email"
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                value={password}
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                onChange={(e) => setPassword(e.target.value)}
-                                autoComplete="current-password"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                value={passwordConfirmation}
-                                name="passwordConfirmation"
-                                label="Password Confirmation"
-                                type="password"
-                                id="passwordConfirmation"
-                                onChange={(e) => setPasswordConfirmation(e.target.value)}
-                                autoComplete="current-password"
+                        {isLogged == false &&
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    value={password}
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    autoComplete="current-password"
+                                />
+                            </Grid>
+                        }
+                        {isLogged == false &&
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    value={passwordConfirmation}
+                                    name="passwordConfirmation"
+                                    label="Password Confirmation"
+                                    type="password"
+                                    id="passwordConfirmation"
+                                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                                    autoComplete="current-password"
+                                />
+                            </Grid>
+                        }
+                        <Grid item xs={12}>
+                            <Input
+                                type='file'
+                                name='picture'
+                                onChange={(e) => onChangeFile(e) }
                             />
                         </Grid>
                     </Grid>
@@ -169,12 +197,12 @@ export default function UserRegistrationForm({title, returnPath, registrationSer
                         className={classes.submit}
                         onClick={createUser}
                     >
-                        Sign Up
+                        {title}
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link href="/" variant="body2">
-                                Already have an account? Sign in
+                            <Link href={linkPath} variant="body2">
+                                {linkMessage}
                             </Link>
                         </Grid>
                     </Grid>

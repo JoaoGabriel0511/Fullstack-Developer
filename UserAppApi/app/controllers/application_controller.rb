@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
       head :unauthorized unless signed_in?
     end
 
+    def authenticate_admin!(options = {})
+      head :unauthorized unless signed_in? && current_user.ADMIN?
+    end
+
     def current_user
       @current_user ||= super || User.find(@current_user_id)
     end
